@@ -1,23 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+
+import Users from "./pages/Users";
+import UserProfileFullView from "./pages/UserProfileFullView";
+import NotFound from "./components/NotFound";
 
 function App() {
+  const [users, setUsers] = React.useState([]);
+
+  React.useEffect(() => {
+    fetch("https://randomuser.me/api/?results=50")
+      .then((response) => response.json())
+      .then(
+        (response) => setUsers(response.results)
+        );
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+        <Routes>
+          <Route path="/" element={<Users users={users} />} />
+          <Route path='*' element={<NotFound />}/>
+          <Route path="/profile/:user" element={<UserProfileFullView users={users} />} />
+      </Routes>
     </div>
   );
 }
